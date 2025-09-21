@@ -1,0 +1,12 @@
+node_modules
+.git
+.env
+*.log
+.DS_Store
+*.zip
+.idea
+.vscode
+.terraform
+.terraform.lock.hcl
+terraform.tfstate.backup
+terraform.tfstate
