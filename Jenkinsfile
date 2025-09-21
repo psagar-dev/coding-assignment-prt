@@ -17,12 +17,9 @@ pipeline {
             }
         }
 
-        stage('Build and Test') {
+        stage('Build') {
             steps {
                 sh 'docker build -t flask-app-repo .'
-                // Run tests (uncomment if test_app.py exists)
-                // sh 'docker run flask-app pytest'
-                echo 'Build and tests completed'
             }
         }
 
