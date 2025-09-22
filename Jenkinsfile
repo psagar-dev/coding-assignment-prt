@@ -25,7 +25,7 @@ pipeline {
 
         stage('Push to ECR') {
             steps {
-                withAWS(region: AWS_REGION, credentials: 'aws-credentials-id') {
+                withAWS(region: AWS_REGION, credentials: 'aws-credentials') {
                     sh """
                     aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
                     docker tag flask-app-repo:latest ${DOCKER_IMAGE}
