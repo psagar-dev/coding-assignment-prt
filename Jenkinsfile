@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = 'ap-south-1'
-        ECR_REPO = '975050024946.dkr.ecr.ap-south-1.amazonaws.com/flask-app'
+        ECR_REPO = '975050024946.dkr.ecr.ap-south-1.amazonaws.com/sagar-app-repo'
         IMAGE_TAG = "${BUILD_NUMBER}"
         EKS_CLUSTER_NAME = 'flask-eks-cluster'
         DOCKER_IMAGE = "${ECR_REPO}:${IMAGE_TAG}"
@@ -36,18 +36,18 @@ pipeline {
             }
         }
 
-        stage('Deploy to EKS') {
-            steps {
-                withAWS(region: AWS_REGION, credentials: 'aws-credentials-id') {
-                    sh """
-                    aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
-                    kubectl apply -f k8s/deployment.yaml
-                    kubectl apply -f k8s/service.yaml
-                    """
-                    echo 'Deployed to EKS'
-                }
-            }
-        }
+        // stage('Deploy to EKS') {
+        //     steps {
+        //         withAWS(region: AWS_REGION, credentials: 'aws-credentials-id') {
+        //             sh """
+        //             aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
+        //             kubectl apply -f k8s/deployment.yaml
+        //             kubectl apply -f k8s/service.yaml
+        //             """
+        //             echo 'Deployed to EKS'
+        //         }
+        //     }
+        // }
     }
 
     post {

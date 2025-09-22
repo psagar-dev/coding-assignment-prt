@@ -1,19 +1,25 @@
-output "eks_cluster_endpoint" {
-  description = "Endpoint for EKS control plane"
-  value       = module.eks.cluster_endpoint
+output "vpc_id" {
+  description = "ID of the VPC"
+  value       = aws_vpc.main.id
 }
 
 output "eks_cluster_name" {
   description = "Name of the EKS cluster"
-  value       = module.eks.cluster_name
+  value       = aws_eks_cluster.cluster.name
 }
 
-output "ecr_repository_url" {
-  description = "URL of the ECR repository"
-  value       = aws_ecr_repository.flask_app.repository_url
+output "eks_cluster_endpoint" {
+  description = "Endpoint for EKS control plane"
+  value       = aws_eks_cluster.cluster.endpoint
 }
 
-output "vpc_id" {
-  description = "ID of the VPC"
-  value       = module.vpc.vpc_id
+output "ecr_repository_urls" {
+  description = "URLs of the ECR repositories"
+  value       = { for k, v in aws_ecr_repository.repo : k => v.repository_url }
+}
+
+# Command to update kubeconfig for the created cluster
+output "configure_kubectl" {
+  description = "Configure kubectl to use the new EKS cluster"
+  value       = "aws eks update-kubeconfig --region ${var.aws_region} --name ${aws_eks_cluster.cluster.name}"
 }
