@@ -5,7 +5,7 @@ pipeline {
         AWS_REGION = 'ap-south-1'
         ECR_REPO = '975050024946.dkr.ecr.ap-south-1.amazonaws.com/sagar-app-repo'
         IMAGE_TAG = "${BUILD_NUMBER}"
-        EKS_CLUSTER_NAME = 'flask-eks-cluster'
+        EKS_CLUSTER_NAME = 'sagar-eks-cluster'
         DOCKER_IMAGE = "${ECR_REPO}:${IMAGE_TAG}"
     }
 
