@@ -47,7 +47,10 @@ pipeline {
                 withAWS(region: "${AWS_REGION}", credentials: 'aws-credentials') {
                     sh """
                     aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
-                    kubectl apply -f <(sed "s|<IMAGE_NAME>|${DOCKER_IMAGE}|g" k8s/deployment.yaml)
+                    sed "s|<IMAGE_NAME>|${DOCKER_IMAGE}|g" k8s/deployment.yaml > k8s/deployment-rendered.yaml
+
+                    # Apply manifests
+                    kubectl apply -f k8s/deployment-rendered.yaml
                     kubectl apply -f k8s/service.yaml
                     """
                     echo 'Deployed to EKS'
