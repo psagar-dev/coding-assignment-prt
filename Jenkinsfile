@@ -27,21 +27,27 @@ pipeline {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: 'aws-credentials') {
                     sh """
+                    # Authenticate Docker with ECR
                     aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO}
+
+                    # Tag the local image with the full ECR repo path
                     docker tag flask-app-repo:latest ${DOCKER_IMAGE}
+
+                    # Push the tagged image to ECR
                     docker push ${DOCKER_IMAGE}
                     """
-                    echo 'Docker image pushed to ECR'
+                    echo '✅ Docker image pushed to ECR'
                 }
             }
         }
+
 
         stage('Deploy to EKS') {
             steps {
                 withAWS(region: "${AWS_REGION}", credentials: 'aws-credentials') {
                     sh """
                     aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
-                    sed "s|<IMAGE_NAME>|${DOCKER_IMAGE}|g" kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f <(sed "s|<IMAGE_NAME>|${DOCKER_IMAGE}|g" k8s/deployment.yaml)
                     kubectl apply -f k8s/service.yaml
                     """
                     echo 'Deployed to EKS'
