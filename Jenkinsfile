@@ -36,18 +36,18 @@ pipeline {
             }
         }
 
-        // stage('Deploy to EKS') {
-        //     steps {
-        //         withAWS(region: AWS_REGION, credentials: 'aws-credentials-id') {
-        //             sh """
-        //             aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
-        //             kubectl apply -f k8s/deployment.yaml
-        //             kubectl apply -f k8s/service.yaml
-        //             """
-        //             echo 'Deployed to EKS'
-        //         }
-        //     }
-        // }
+        stage('Deploy to EKS') {
+            steps {
+                withAWS(region: AWS_REGION, credentials: 'aws-credentials') {
+                    sh """
+                    aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME} --region ${AWS_REGION}
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                    """
+                    echo 'Deployed to EKS'
+                }
+            }
+        }
     }
 
     post {
